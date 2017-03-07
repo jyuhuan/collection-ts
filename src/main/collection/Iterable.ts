@@ -1,4 +1,4 @@
-import { TSIterator, Iterator, MappedIterator } from './Iterator';
+import { Iterator, MappedIterator, TSIterator } from './Iterator';
 
 export abstract class Iterable<T> {
   abstract newIterator(): Iterator<T>;
@@ -8,11 +8,8 @@ export abstract class Iterable<T> {
   }
 
   // Conforms to TypeScript iterable to allow for..of syntax
-
   [Symbol.iterator]() {
-    const e = this.newIterator();
-    const tsi = new TSIterator<T>(e);
-    return tsi;
+    return new TSIterator<T>(this.newIterator());
   }
 }
 
