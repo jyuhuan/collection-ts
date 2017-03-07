@@ -1,12 +1,12 @@
 import * as util from './Util';
 
-export class ExpandableArray<T> {
-  data: Array<T>;
+export class ExpandableArray<X> {
+  data: Array<X>;
   private _size: number;
   loadFactor: number;
 
   constructor(initialCapacity: number, loadFactor: number) {
-    this.data = new Array<T>(initialCapacity);
+    this.data = new Array<X>(initialCapacity);
     this._size = 0;
     this.loadFactor = loadFactor;
   }
@@ -19,13 +19,13 @@ export class ExpandableArray<T> {
     return this.at(idx);
   }
 
-  set(idx: number, newValue: T): void {
-    this.data[idx] = newValue;
+  update(idx: number, x: X): void {
+    this.data[idx] = x;
   }
 
-  add(t: T): void {
+  add(x: X): void {
     if (this.shouldExpand()) this.expand();
-    this.data[this._size] = t;
+    this.data[this._size] = x;
     this._size += 1;
   }
 
@@ -35,7 +35,7 @@ export class ExpandableArray<T> {
 
   expand() {
     const newLength = util.nextPowerOfTwo(this.data.length)
-    const newData = new Array<T>(newLength);
+    const newData = new Array<X>(newLength);
     for (let i = 0; i < this._size; i++) newData[i] = this.data[i];
     this.data = null;
     this.data = newData;
@@ -45,26 +45,47 @@ export class ExpandableArray<T> {
     return this._size;
   }
 
+  insert(idx: number, x: X): void {
+    if (this.shouldExpand()) this.expand();
+    for (let i = this.size - 1; i >= idx; i--) this.data[i + 1] = this.data[i];
+    this.data[idx] = x;
+    this._size += 1;
+  }
+
+  prepend(x: X): void {
+    this.insert(0, x);
+  }
+
+  append(x: X): void {
+    if (this.shouldExpand()) this.expand();
+    this.data[this.size] = x;
+    this._size += 1;
+  }
+
+  clear(): void {
+    this._size = 0;
+  }
 
   //
 
   static defaultCapacity = 16;
   static defaultLoadFactor = 0.7;
 
-  static ofInitialCapacityAndLoadFactor<T>(initialCapacity: number, loadFactor: number): ExpandableArray<T> {
-    return new ExpandableArray<T>(initialCapacity, loadFactor);
+  static ofInitialCapacityAndLoadFactor<X>(initialCapacity: number, loadFactor: number): ExpandableArray<X> {
+    return new ExpandableArray<X>(initialCapacity, loadFactor);
   }
 
-  static apply<T>(): ExpandableArray<T> {
-    return ExpandableArray.ofInitialCapacityAndLoadFactor<T>(
+  static apply<X>(): ExpandableArray<X> {
+    return ExpandableArray.ofInitialCapacityAndLoadFactor<X>(
       ExpandableArray.defaultCapacity, 
       ExpandableArray.defaultLoadFactor
     );
   }
 
-  static from<T>(...ts: T[]): ExpandableArray<T> {
-    const arr = ExpandableArray.ofInitialCapacityAndLoadFactor<T>(ts.length, ExpandableArray.defaultLoadFactor);
-    for (let i = 0; i < ts.length; i++) arr.set(i, ts[i]);
+  static from<X>(...ts: X[]): ExpandableArray<X> {
+    const arr = ExpandableArray.ofInitialCapacityAndLoadFactor<X>(ts.length, ExpandableArray.defaultLoadFactor);
+    for (let i = 0; i < ts.length; i++) arr.update(i, ts[i]);
+    arr._size = ts.length;
     return arr;
   }
 
