@@ -1,8 +1,10 @@
 # Collection.ts
 
-> 🚧 Under active early-stage development. Check out what has been implemented so far in the [test directory](src/test/). See [roadmap]().
+> 🚧 Under active early-stage development.  
+Check out what has been implemented so far in the [test directory](src/test/).   
+See roadmap [here]().
 
-A library of efficient, lazy, generic collections for TypeScript. 
+A library of lazy, efficient, generic collections for TypeScript. 
 
 ## Features
 
