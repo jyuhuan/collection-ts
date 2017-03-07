@@ -15,7 +15,7 @@ export class ArraySeq<T> extends Seq<T> {
   }
 
   length(): number {
-    return this.data.length();
+    return this.data.size;
   }
 
 
