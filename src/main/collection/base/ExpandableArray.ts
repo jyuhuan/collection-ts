@@ -62,6 +62,18 @@ export class ExpandableArray<X> {
     this._size += 1;
   }
 
+  reversed(): ExpandableArray<X> {
+    const l = this.data.length;
+    const newData = new Array<X>(l);
+    for (let i = 0; i < this.size; i++) newData[l - i - 1] = this.data[i];
+    return ExpandableArray.from(...newData);
+  }
+
+  reverse(): void {
+    const r = this.reversed();
+    this.data = r.data;
+  }
+
   clear(): void {
     this._size = 0;
   }
@@ -73,6 +85,10 @@ export class ExpandableArray<X> {
 
   static ofInitialCapacityAndLoadFactor<X>(initialCapacity: number, loadFactor: number): ExpandableArray<X> {
     return new ExpandableArray<X>(initialCapacity, loadFactor);
+  }
+
+  static ofInitialCapacity<X>(initialCapacity: number): ExpandableArray<X> {
+    return new ExpandableArray<X>(initialCapacity, ExpandableArray.defaultLoadFactor);
   }
 
   static apply<X>(): ExpandableArray<X> {
