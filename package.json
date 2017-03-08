@@ -1,7 +1,7 @@
 {
-  "name": "node-ts",
+  "name": "collection-ts",
   "description": "description",
-  "authors": "author",
+  "authors": "Yuhuan Jiang <jyuhuan@gmail.com>",
   "version": "1.0.0",
   "dependencies": {}
 }
