@@ -1,9 +1,15 @@
-import { LinkedSeq } from '../main/collection/mutable/LinkedSeq';
+import { LinkedList } from '../main/collection/base/LinkedList';
 
-const l = LinkedSeq.from("a", "b", "c");
+const l = new LinkedList<string>();
+l.append("a")
+l.append("b")
+l.append("c")
+l.append("d")
+l.append("e")
 
-for (const str of l) {
-  console.log(str)
-}
+const n = l.nodeAt(-1);
+
+l.reverse();
+l.reverseSublist(0, 5);
 
 const bp = 0;

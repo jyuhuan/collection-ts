@@ -70,8 +70,21 @@ export class ExpandableArray<X> {
   }
 
   reverse(): void {
-    const r = this.reversed();
-    this.data = r.data;
+    this.reverseSubarray(0, this.data.length);
+  }
+
+  reverseSubarray(start: number, end: number): void {
+    let i = start;
+    let j = end - 1;
+    while (i < j) {
+      this.swap(i, j);
+    }
+  }
+
+  swap(i: number, j: number): void {
+    const t = this.data[i];
+    this.data[i] = this.data[j];
+    this.data[j] = t;
   }
 
   clear(): void {

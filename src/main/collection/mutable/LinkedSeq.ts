@@ -5,39 +5,51 @@ import { Iterator } from '../Iterator';
 
 export class LinkedSeq<X> extends KeyMutableSeq<X> {
 
-  ll: LinkedList<X>
+  lst: LinkedList<X>
   
   constructor(linkedList: LinkedList<X>) {
     super();
-    this.ll = linkedList;
+    this.lst = linkedList;
   }
 
   prepend(x: X): void {
-    this.ll.prepend(x);
+    this.lst.prepend(x);
   }
 
   append(x: X): void {
-    this.ll.append(x);
+    this.lst.append(x);
   }
 
   clear(): void {
-    this.ll.clear();
+    this.lst.clear();
   }
 
   insert(idx: number, x: X): void {
-    this.ll.insert(idx, x);
+    this.lst.insert(idx, x);
   }
 
   set(idx: number, x: X): void {
-    this.ll.set(idx, x);
+    this.lst.set(idx, x);
   }
 
   get(idx: number): X {
-    return this.ll.get(idx);
+    return this.lst.get(idx);
   }
 
   length(): number {
-    return this.ll.length();
+    return this.lst.length();
+  }
+
+  reversed(): LinkedSeq<X> {
+    return null;
+  }
+
+  reverse(): void {
+    this.lst.reverse();
+  }
+
+  reverseSubseq(start: number, end: number): void {
+    this.lst.reverseSublist(start, end);
   }
 
   newIterator(): Iterator<X> {
@@ -57,7 +69,7 @@ class LinkedSeqIterator<X> implements Iterator<X> {
 
   constructor(l: LinkedSeq<X>) {
     this.l = l;
-    this.cur = l.ll.dummy;
+    this.cur = l.lst.dummy;
   }
 
   current(): X {

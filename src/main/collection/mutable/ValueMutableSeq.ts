@@ -9,5 +9,8 @@ export abstract class ValueMutableSeq<X> extends Seq<X> {
     this.set(i, this.get(j));
     this.set(j, t);
   }
+
+  abstract reverse(): void;
+  abstract reverseSubseq(start: number, end: number): void;
   
 }

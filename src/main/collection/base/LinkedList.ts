@@ -59,10 +59,16 @@ export class LinkedList<X> {
     this.nodeAt(idx).data = x;
   }
   
+  /**
+   * Finds a node at an index. The first node in the linked list has index 0.
+   * 
+   * @param idx The index of the node. The idx-th node will be the target to find. 
+   *        if `idx < 0`, the dummy node will be returned. 
+   */
   nodeAt(idx: number): LinkedNode<X> {
     let i = 0;
-    let cur = this.dummy.next;
-    while (i < idx && cur != null) {
+    let cur = this.dummy;
+    while (i <= idx && cur != null) {
       cur = cur.next;
       i += 1;
     }
@@ -81,6 +87,32 @@ export class LinkedList<X> {
       i += 1;
     }
     return i;
+  }
+
+  reverse(): void {
+    let newHead: LinkedNode<X> = null;
+    let cur = this.dummy.next;
+    this.last = cur;
+    while (cur != null) {
+      const oldNext = cur.next;
+      cur.next = newHead;
+      newHead = cur;
+      cur = oldNext;
+    }
+    this.dummy.next = newHead;
+  }
+
+  reverseSublist(start: number, end: number): void {
+    const p = this.nodeAt(start - 1);
+    const c = p.next;
+    let n = c.next;
+    for (let i = 0; i < end - start - 1; i++) {
+      c.next = n.next;
+      n.next = p.next;
+      p.next = n;
+      n = c.next;
+    }
+    this.last = c;
   }
 
 

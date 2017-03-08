@@ -8,7 +8,7 @@ const eq: Eq<string> = new class {
 }
 
 const arr = mut.ArraySeq.tabulate(10, i => `Item ${i}`)
-const idx = arr.indexOf("Item 3", eq)
+const idx = arr.indexOf("Item 3")
 const rev = arr.reversed();
 
 // Create a mutable array using a varargs parameter list.

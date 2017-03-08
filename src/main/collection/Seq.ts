@@ -20,12 +20,11 @@ export abstract class Seq<X> extends Iterable<X> {
   abstract get(idx: number): X;
   abstract length(): number;
 
-  // reversed(): Seq<X> {
-  //   const arr = ArraySeq.tabulate(this.length(), i => this.get(i));
-  //   return arr.reversed();
-  // }
+  indexOf(x: X): number {
+    return this.indexWhere(y => x === y);
+  }
 
-  indexOf(x: X, e: Eq<X>): number {
+  indexOfUnder(x: X, e: Eq<X>): number {
     return this.indexWhere(y => e.eq(y, x))
   }
 
@@ -39,6 +38,7 @@ export abstract class Seq<X> extends Iterable<X> {
     return -1;
   }
 
+  abstract reversed(): Seq<X>;  // Using the implementation from ArraySeq will result in error.
 
   // abstract lastIndexOf(x: X): number;
   // abstract lastIndexWhere(f: (x: X) => boolean): number;

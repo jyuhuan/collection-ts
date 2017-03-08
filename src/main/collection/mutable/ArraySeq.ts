@@ -4,39 +4,47 @@ import { Eq } from '../Eq';
 
 export class ArraySeq<T> extends KeyMutableSeq<T> {
 
-  data: ExpandableArray<T>;
+  arr: ExpandableArray<T>;
 
   constructor(data: ExpandableArray<T>) {
     super();
-    this.data = data;
+    this.arr = data;
   }
 
   get(idx: number): T {
-    return this.data.at(idx);
+    return this.arr.at(idx);
   }
 
   length(): number {
-    return this.data.size;
+    return this.arr.size;
   }
 
   prepend(x: T): void {
-    this.data.prepend(x);
+    this.arr.prepend(x);
   }
   append(x: T): void {
-    this.data.append(x);
+    this.arr.append(x);
   }
   clear(): void {
-    this.data.clear();
+    this.arr.clear();
   }
   insert(idx: number, x: T): void {
-    this.data.insert(idx, x);
+    this.arr.insert(idx, x);
   }
   set(idx: number, t: T): void {
-    this.data.update(idx, t);
+    this.arr.update(idx, t);
   }
 
   reversed(): ArraySeq<T> {
-    return new ArraySeq<T>(this.data.reversed());
+    return new ArraySeq<T>(this.arr.reversed());
+  }
+
+  reverse(): void {
+    this.arr.reverse();
+  }
+
+  reverseSubseq(start: number, end: number): void {
+    this.arr.reverseSubarray(start, end);
   }
 
   //
