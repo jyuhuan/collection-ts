@@ -1,5 +1,6 @@
 import { KeyMutableSeq } from './KeyMutableSeq';
 import { ExpandableArray } from '../base/ExpandableArray';
+import { Eq } from '../Eq';
 
 export class ArraySeq<T> extends KeyMutableSeq<T> {
 
@@ -10,7 +11,7 @@ export class ArraySeq<T> extends KeyMutableSeq<T> {
     this.data = data;
   }
 
-  apply(idx: number): T {
+  get(idx: number): T {
     return this.data.at(idx);
   }
 
@@ -30,11 +31,13 @@ export class ArraySeq<T> extends KeyMutableSeq<T> {
   insert(idx: number, x: T): void {
     this.data.insert(idx, x);
   }
-  update(idx: number, t: T): void {
+  set(idx: number, t: T): void {
     this.data.update(idx, t);
   }
 
-
+  reversed(): ArraySeq<T> {
+    return new ArraySeq<T>(this.data.reversed());
+  }
 
   //
 
@@ -43,9 +46,9 @@ export class ArraySeq<T> extends KeyMutableSeq<T> {
   }
 
   static tabulate<X>(n: number, f: (i: number) => X) {
-    const xs = new Array<X>(n);
+    const xs: X[] = new Array<X>(n);
     for (let i = 0; i < n; i++) xs[i] = f(i);
-    return ArraySeq.from(xs);
+    return ArraySeq.from<X>(...xs);
   }
 
 }
