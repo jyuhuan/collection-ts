@@ -1,13 +1,13 @@
 import { Seq } from '../Seq';
 
-export abstract class ValueMutableSeq<T> extends Seq<T> {
+export abstract class ValueMutableSeq<X> extends Seq<X> {
 
-  abstract update(idx: number, t: T): void;
+  abstract set(idx: number, x: X): void;
 
   swap(i: number, j: number): void {
-    const t = this.apply(i);
-    this.update(i, this.apply(j));
-    this.update(j, t);
+    const t = this.get(i);
+    this.set(i, this.get(j));
+    this.set(j, t);
   }
   
 }
