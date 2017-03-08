@@ -1,13 +1,12 @@
-export abstract class Iterator<T> {
-  abstract current(): T;
-  abstract advance(): boolean;
+export interface Iterator<T> {
+  current(): T;
+  advance(): boolean;
 }
 
-export class MappedIterator<T, U> extends Iterator<U> {
+export class MappedIterator<T, U> implements Iterator<U> {
   it: Iterator<T>;
   f: (t: T) => U;
   constructor(it: Iterator<T>, f: (t: T) => U) {
-    super();
     this.it = it;
     this.f = f;
   }
