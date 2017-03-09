@@ -29,7 +29,7 @@ export abstract class Set<K> extends Func<K, boolean> {
 
 }
 
-class UnionedSet<X> extends Set<X> {
+class Set$union<X> extends Set<X> {
   set1: Set<X>;
   set2: Set<X>;
 
