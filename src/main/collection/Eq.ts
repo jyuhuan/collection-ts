@@ -16,3 +16,10 @@ export interface Eq<X> {
    */
   eq(x1: X, x2: X): boolean;
 }
+
+export class DefaultJavaScriptEq<X> implements Eq<X> {
+  eq(x1: X, x2: X) {
+    return x1 === x2;
+  }
+}
+
