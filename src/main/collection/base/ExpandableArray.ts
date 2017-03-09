@@ -11,7 +11,12 @@ export class ExpandableArray<X> {
     this.loadFactor = loadFactor;
   }
 
+  boundCheck(idx: number) {
+    if (!(0 <= idx && idx < this._size)) throw new Error(`Index ${idx} is out of bounds!`)
+  }
+
   at(idx: number) {
+    this.boundCheck(idx);
     return this.data[idx];
   }
 
@@ -19,7 +24,8 @@ export class ExpandableArray<X> {
     return this.at(idx);
   }
 
-  update(idx: number, x: X): void {
+  set(idx: number, x: X): void {
+    this.boundCheck(idx);
     this.data[idx] = x;
   }
 
@@ -43,6 +49,10 @@ export class ExpandableArray<X> {
 
   get size(): number {
     return this._size;
+  }
+
+  get capacity(): number {
+    return this.data.length;
   }
 
   insert(idx: number, x: X): void {
@@ -113,8 +123,15 @@ export class ExpandableArray<X> {
 
   static from<X>(...ts: X[]): ExpandableArray<X> {
     const arr = ExpandableArray.ofInitialCapacityAndLoadFactor<X>(ts.length, ExpandableArray.defaultLoadFactor);
-    for (let i = 0; i < ts.length; i++) arr.update(i, ts[i]);
     arr._size = ts.length;
+    for (let i = 0; i < ts.length; i++) arr.set(i, ts[i]);
+    return arr;
+  }
+
+  static fill<X>(numElems: number, value: () => X): ExpandableArray<X> {
+    const arr = ExpandableArray.ofInitialCapacityAndLoadFactor<X>(numElems, ExpandableArray.defaultLoadFactor);
+    arr._size = numElems;
+    for (let i = 0; i < numElems; i++) arr.set(i, value());
     return arr;
   }
 

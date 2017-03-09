@@ -32,7 +32,7 @@ export class ArraySeq<T> extends KeyMutableSeq<T> {
     this.arr.insert(idx, x);
   }
   set(idx: number, t: T): void {
-    this.arr.update(idx, t);
+    this.arr.set(idx, t);
   }
 
   reversed(): ArraySeq<T> {
