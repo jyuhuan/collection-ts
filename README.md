@@ -4,7 +4,9 @@
 Check out what has been implemented so far in the [test directory](src/test/).   
 See roadmap [here]().
 
-A library of lazy, efficient, generic collections for TypeScript. Inspired by [Poly-collection](https://github.com/ctongfei/poly-collection).
+A library of lazy, efficient, generic collections for TypeScript. 
+
+Collection.ts is inspired by [Poly-collection](https://github.com/ctongfei/poly-collection). 
 
 ## Features
 
