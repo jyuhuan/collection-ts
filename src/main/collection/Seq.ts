@@ -1,6 +1,9 @@
 import { Iterable } from './Iterable';
 import { Iterator } from './Iterator';
 import { Eq } from './Eq';
+import { Map } from './Map';
+import { Set } from './Set';
+import { Range } from './Range';
 
 /**
  * Represents a sequence.
@@ -43,14 +46,14 @@ export abstract class Seq<X> extends Iterable<X> {
   // abstract lastIndexOf(x: X): number;
   // abstract lastIndexWhere(f: (x: X) => boolean): number;
 
-  newIterator(): Iterator<X> { return new SeqIterator(this); }
+  newIterator(): Iterator<X> { return new Seq$newIterator(this); }
 }
 
 
 /**
  * Represents an iterator for a sequence.
  */
-class SeqIterator<X> implements Iterator<X> {
+class Seq$newIterator<X> implements Iterator<X> {
 
   seq: Seq<X>;
   constructor(seq: Seq<X>) {
@@ -69,3 +72,36 @@ class SeqIterator<X> implements Iterator<X> {
   }
 
 }
+
+
+class Set$asMap<X> extends Map<number, X> {
+  seq: Seq<X>;
+  constructor(seq: Seq<X>) {
+    super();
+    this.seq = seq;
+  }
+  get(idx: number): X {
+    return this.seq.get(idx);
+  }
+  keySet(): Set<number> {
+    return new Set$asMap$keySet(this.seq.size());
+  }
+}
+
+class Set$asMap$keySet extends Set<number> {
+  seqSize: number;
+  constructor(seqSize: number) {
+    super();
+    this.seqSize = seqSize;
+  }
+  keyEq(): Eq<number> {
+    return { eq: (i, j) => i === j };
+  }
+  has(k: number): boolean {
+    return 0 <= k && k < this.seqSize;
+  }
+  keys(): Iterable<number> {
+    return new Range(0, this.seqSize);
+  }
+}
+
