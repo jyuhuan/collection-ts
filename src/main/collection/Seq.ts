@@ -14,15 +14,19 @@ export abstract class Seq<X> extends Iterable<X> {
   }
 
   get(idx: number): X {
+    return this.tailAt(idx).head();
+  }
+
+  tailAt(idx: number): Seq<X> {
     if (idx < 0) throw new Error(`Index ${idx} is out of bounds!`);
     let cur: Seq<X> = this;
     let i = 0;
     while (i < idx) {
-      if (cur.isEmpty()) throw new Error(`Index ${idx} is out of bounds!`);
+      if (cur.tail().isEmpty()) throw new Error(`Index ${idx} is out of bounds!`);
       i += 1;
       cur = cur.tail();
     }
-    return cur.head();
+    return cur;
   }
 
   length(): number {
