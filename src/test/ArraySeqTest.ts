@@ -4,6 +4,8 @@ import { ArraySeq } from '../main/collection/mutable/ArraySeq';
 
 const ss = ArraySeq.from("bob", "christine", "daniel", "emily");
 
+const ll = ss.map(s => s.length);
+
 const indexFoundUnderEq = ss.indexOfUnder("christine", { eq: (a: string, b: string) => a === b });
 const indexFoundUnderJSEquality = ss.indexOf("christine");
 

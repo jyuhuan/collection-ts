@@ -1,8 +1,8 @@
-import { KeyMutableSeq } from './KeyMutableSeq';
 import { ExpandableArray } from '../base/ExpandableArray';
 import { Eq } from '../Eq';
+import { KeyMutableRandomAccessSeq } from './KeyMutableRandomAccessSeq';
 
-export class ArraySeq<T> extends KeyMutableSeq<T> {
+export class ArraySeq<T> extends KeyMutableRandomAccessSeq<T> {
 
   arr: ExpandableArray<T>;
 
@@ -11,7 +11,7 @@ export class ArraySeq<T> extends KeyMutableSeq<T> {
     this.arr = data;
   }
 
-  get(idx: number): T {
+  fastGet(idx: number): T {
     return this.arr.at(idx);
   }
 

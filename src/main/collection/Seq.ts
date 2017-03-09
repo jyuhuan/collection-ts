@@ -3,7 +3,6 @@ import { Iterator } from './Iterator';
 import { Eq } from './Eq';
 import { Map } from './Map';
 import { Set } from './Set';
-import { Range } from './Range';
 
 /**
  * Represents a sequence.
@@ -20,7 +19,16 @@ import { Range } from './Range';
  */
 export abstract class Seq<X> extends Iterable<X> {
 
-  abstract get(idx: number): X;
+  get(idx: number): X {
+    let i = -1;
+    const iter = this.newIterator();
+    while (i < idx) {
+      i += 1;
+      iter.advance()
+    }
+    return iter.current();
+  }
+
   abstract length(): number;
 
   indexOf(x: X): number {
@@ -41,40 +49,27 @@ export abstract class Seq<X> extends Iterable<X> {
     return -1;
   }
 
-  abstract reversed(): Seq<X>;  // Using the implementation from ArraySeq will result in error.
+  reversed(): Seq<X> {
+    return new Seq$reversed(this);
+  }
+
+
+  //region HIGHER-ORDER FUNCTIONS
+
+  map<Y>(f: (x: X) => Y): Seq<Y> {
+    return new Seq$map(this, f);
+  }
+
+  //endregion
 
   // abstract lastIndexOf(x: X): number;
   // abstract lastIndexWhere(f: (x: X) => boolean): number;
 
-  newIterator(): Iterator<X> { return new Seq$newIterator(this); }
 }
 
 
-/**
- * Represents an iterator for a sequence.
- */
-class Seq$newIterator<X> implements Iterator<X> {
 
-  seq: Seq<X>;
-  constructor(seq: Seq<X>) {
-    this.seq = seq;
-  }
-
-  i = -1;
-
-  current(): X {
-    return this.seq.get(this.i);
-  }
-
-  advance(): boolean {
-    this.i += 1;
-    return this.i < this.seq.length();
-  }
-
-}
-
-
-class Set$asMap<X> extends Map<number, X> {
+class Seq$asMap<X> extends Map<number, X> {
   seq: Seq<X>;
   constructor(seq: Seq<X>) {
     super();
@@ -84,11 +79,12 @@ class Set$asMap<X> extends Map<number, X> {
     return this.seq.get(idx);
   }
   keySet(): Set<number> {
-    return new Set$asMap$keySet(this.seq.size());
+    return new Seq$asMap$keySet(this.seq.size());
   }
 }
 
-class Set$asMap$keySet extends Set<number> {
+
+class Seq$asMap$keySet extends Set<number> {
   seqSize: number;
   constructor(seqSize: number) {
     super();
@@ -101,7 +97,105 @@ class Set$asMap$keySet extends Set<number> {
     return 0 <= k && k < this.seqSize;
   }
   keys(): Iterable<number> {
-    return new Range(0, this.seqSize);
+   return new Seq$asMap$keySet$keys(0, this.seqSize);
   }
 }
 
+class Seq$asMap$keySet$keys extends Iterable<number> {
+  start: number;
+  end: number;
+  constructor(start: number, end: number) {
+    super();
+    this.start = start;
+    this.end = end;
+  }
+
+  newIterator(): Iterator<number> {
+    return new Seq$asMap$keySet$keys$newIterator(this.start, this.end);
+  }
+
+}
+
+class Seq$asMap$keySet$keys$newIterator implements Iterator<number> {
+  start: number;
+  end: number;
+  i: number;
+  constructor(start: number, end: number) {
+    this.start = start;
+    this.end = end;
+    this.i = start - 1;
+  }
+
+  current(): number {
+    return this.i;
+  }
+  advance(): boolean {
+    this.i += 1;
+    return this.i < this.end;
+  }
+
+}
+
+class Seq$reversed<X> extends Seq<X> {
+  xs: Seq<X>;
+  constructor(xs: Seq<X>) {
+    super();
+    this.xs = xs;
+  }
+  length(): number {
+    return this.xs.length();
+  }
+  newIterator(): Iterator<X> {
+    return new Seq$reversed$newIterator(this.xs);
+  } 
+}
+
+class Seq$reversed$newIterator<X> implements Iterator<X> {
+  arr: Array<X>;
+  i: number;
+  constructor(seq: Seq<X>) {
+    this.arr = new Array<X>(seq.length());
+    this.i = this.arr.length;
+  }
+  current(): X {
+    return this.arr[this.i];
+  }
+  advance(): boolean {
+    this.i -= 1;
+    return this.i >= 0;
+  }
+}
+
+class Seq$map<X, Y> extends Seq<Y> {
+  xs: Seq<X>;
+  f: (x: X) => Y;
+  constructor(xs: Seq<X>, f: (x: X) => Y) {
+    super();
+    this.xs = xs;
+    this.f = f;
+  }
+  length(): number {
+    return this.xs.length();
+  }
+  newIterator(): Iterator<Y> {
+    return new Seq$map$newIterator(this.xs, this.f);
+  }
+}
+
+class Seq$map$newIterator<X, Y> implements Iterator<Y> {
+
+  iter: Iterator<X>;
+  f: (x: X) => Y;
+  constructor(xs: Seq<X>, f: (x: X) => Y) {
+    this.iter = xs.newIterator();
+    this.f = f;
+  }
+
+  current(): Y {
+    return this.f(this.iter.current());
+  }
+  advance(): boolean {
+    return this.iter.advance();
+  }
+
+}

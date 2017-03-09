@@ -1,6 +1,6 @@
-import { Range } from '../main/collection/Range';
+import * as tc from '../main/collection';
 
-const r = new Range(3, 8);
+const r = new tc.Range(3, 8);
 const rr = r.reversed();
 
 console.log(r.toString());

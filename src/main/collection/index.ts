@@ -5,3 +5,4 @@ export * from './Seq';
 export * from './Set';
 export * from './Eq';
 export * from './Ord';
+export * from './RandomAccessSeq';
