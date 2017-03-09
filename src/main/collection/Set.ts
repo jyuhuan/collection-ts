@@ -1,7 +1,13 @@
 import { Eq } from './Eq';
 import { Iterable } from './Iterable';
-export abstract class Set<K> {
+import { Func } from './Funcs';
+
+export abstract class Set<K> extends Func<K, boolean> {
   
+  constructor() {
+    super((k: K) => this.has(k));
+  }
+
   abstract keyEq(): Eq<K>;
 
   abstract has(k: K): boolean;

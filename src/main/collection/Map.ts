@@ -1,9 +1,14 @@
 import { Set } from './Set';
 import { Iterable } from './Iterable';
+import { Func } from './Funcs';
 
-export abstract class Map<K, V> {
+export abstract class Map<K, V> extends Func<K, V> {
   abstract get(k: K): V;
   abstract keySet(): Set<K>;
+
+  constructor() {
+    super((k: K) => this.get(k));
+  }
 
   hasKey(k: K) {
     return this.keySet().has(k);

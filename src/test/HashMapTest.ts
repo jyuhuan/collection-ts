@@ -33,6 +33,6 @@ for (const pair of map.pairs()) {
   console.log(pair);
 }
 
-
+const danielVal = map('daniel')
 
 const bp = 0;
