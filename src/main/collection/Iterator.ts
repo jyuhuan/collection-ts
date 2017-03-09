@@ -4,7 +4,7 @@ export interface Iterator<T> {
 }
 
 
-export class ConcatenatedIterator<X, Y> implements Iterator<X|Y> {
+export class Iterator$concat<X, Y> implements Iterator<X|Y> {
   iter1: Iterator<X>; 
   iter2: Iterator<Y>;
   curIter: Iterator<X|Y>;
@@ -31,7 +31,7 @@ export class ConcatenatedIterator<X, Y> implements Iterator<X|Y> {
   }
 }
 
-export class MappedIterator<T, U> implements Iterator<U> {
+export class Iterator$map<T, U> implements Iterator<U> {
   it: Iterator<T>;
   f: (t: T) => U;
   constructor(it: Iterator<T>, f: (t: T) => U) {
@@ -47,7 +47,7 @@ export class MappedIterator<T, U> implements Iterator<U> {
   }
 }
 
-export class FilteredIterator<X> implements Iterator<X> {
+export class Iterator$filter<X> implements Iterator<X> {
   ix: Iterator<X>;
   p: (x: X) => boolean;
   
@@ -69,7 +69,7 @@ export class FilteredIterator<X> implements Iterator<X> {
   }
 }
 
-export class ZippedWithIterator<X, Y, Z> implements Iterator<Z> {
+export class Iterator$zipWith<X, Y, Z> implements Iterator<Z> {
   ix: Iterator<X>; 
   iy: Iterator<Y>;
   f: (x: X, y: Y) => Z;
@@ -86,7 +86,7 @@ export class ZippedWithIterator<X, Y, Z> implements Iterator<Z> {
   }
 }
 
-export class ZippedIterator<X, Y> extends ZippedWithIterator<X, Y, [X, Y]> {
+export class Iterator$zip<X, Y> extends Iterator$zipWith<X, Y, [X, Y]> {
   constructor(ix: Iterator<X>, iy: Iterator<Y>) {
     super(ix, iy, (x, y) => [x ,y]);
   }

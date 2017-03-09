@@ -1,5 +1,5 @@
 import { StringBuilder } from './util/StringBuilder';
-import { Iterator, MappedIterator, TSIterator, FilteredIterator, ConcatenatedIterator, ZippedWithIterator } from './Iterator';
+import { Iterator, Iterator$map, TSIterator, Iterator$filter, Iterator$concat, Iterator$zipWith } from './Iterator';
 
 export abstract class Iterable<X> {
   abstract newIterator(): Iterator<X>;
@@ -36,7 +36,7 @@ export abstract class Iterable<X> {
   //region Operations between Iterables
 
   concat<Y>(that: Iterable<Y>): Iterable<X|Y> {
-    return new ConcatenatedIterable(this, that);
+    return new Iterable$concat(this, that);
   }
 
   //endregion
@@ -45,19 +45,19 @@ export abstract class Iterable<X> {
   //region HIGHER-ORDER FUNCTIONS
 
   map<U>(f: (t: X) => U): Iterable<U> {
-    return new MappedIterable(this, f);
+    return new Iterable$map(this, f);
   }
 
   filter(p: (x: X) => boolean): Iterable<X> {
-    return new FilteredIterable(this, p);
+    return new Iterable$filter(this, p);
   }
 
   zip<Y>(that: Iterable<Y>): Iterable<[X, Y]> {
-    return new ZippedIterable(this, that);
+    return new Iterable$zip(this, that);
   }
 
   zipWith<Y, Z>(that: Iterable<Y>, f: (x: X, y: Y) => Z) {
-    return new ZippedWithIterable(this, that, f);
+    return new Iterable$zipWith(this, that, f);
   }
 
   //endregion
@@ -91,7 +91,7 @@ export abstract class Iterable<X> {
 }
 
 
-class ConcatenatedIterable<X, Y> extends Iterable<X|Y> {
+class Iterable$concat<X, Y> extends Iterable<X|Y> {
   ix: Iterable<X>;
   iy: Iterable<Y>;
   
@@ -102,11 +102,11 @@ class ConcatenatedIterable<X, Y> extends Iterable<X|Y> {
   }
 
   newIterator(): Iterator<X|Y> {
-    return new ConcatenatedIterator(this.ix.newIterator(), this.iy.newIterator());
+    return new Iterator$concat(this.ix.newIterator(), this.iy.newIterator());
   }
 }
 
-class MappedIterable<T, U> extends Iterable<U> {
+class Iterable$map<T, U> extends Iterable<U> {
 
   it: Iterable<T>;
   f: (t: T) => U
@@ -117,13 +117,13 @@ class MappedIterable<T, U> extends Iterable<U> {
   }
 
   newIterator(): Iterator<U> {
-    return new MappedIterator(this.it.newIterator(), this.f);
+    return new Iterator$map(this.it.newIterator(), this.f);
   }
 
 }
 
 
-class FilteredIterable<X> extends Iterable<X> {
+class Iterable$filter<X> extends Iterable<X> {
   ix: Iterable<X>;
   p: (x: X) => boolean;
   
@@ -134,11 +134,11 @@ class FilteredIterable<X> extends Iterable<X> {
   }
 
   newIterator(): Iterator<X> {
-    return new FilteredIterator(this.ix.newIterator(), this.p);
+    return new Iterator$filter(this.ix.newIterator(), this.p);
   }
 }
 
-class ZippedWithIterable<X, Y, Z> extends Iterable<Z> {
+class Iterable$zipWith<X, Y, Z> extends Iterable<Z> {
   ix: Iterable<X>; 
   iy: Iterable<Y>; 
   f: (x: X, y: Y) => Z;
@@ -149,11 +149,11 @@ class ZippedWithIterable<X, Y, Z> extends Iterable<Z> {
     this.f = f;
   }
   newIterator(): Iterator<Z> {
-    return new ZippedWithIterator(this.ix.newIterator(), this.iy.newIterator(), this.f);
+    return new Iterator$zipWith(this.ix.newIterator(), this.iy.newIterator(), this.f);
   }
 }
 
-class ZippedIterable<X, Y> extends ZippedWithIterable<X, Y, [X, Y]> {
+class Iterable$zip<X, Y> extends Iterable$zipWith<X, Y, [X, Y]> {
   constructor(ix: Iterable<X>, iy: Iterable<Y>) {
     super(ix, iy, (x, y) => [x, y]);
   }
