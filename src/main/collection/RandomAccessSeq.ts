@@ -4,18 +4,45 @@ import { Iterator } from './Iterator';
 export abstract class RandomAccessSeq<X> extends Seq<X> {
 
   abstract fastGet(idx: number): X;
-  
   get(idx: number) {
     return this.fastGet(idx);
   }
 
+  abstract fastLength(): number;
+  length() {
+    return this.fastLength();
+  }
+
+  head(): X {
+    return this.fastGet(0);
+  }
+
+  tail(): RandomAccessSeq<X> {
+    return new RandomAccessSeq$tail(this);
+  }
+
+  isEmpty(): boolean {
+    return this.fastLength() == 0;
+  }
 
   newIterator() {
     return new RandomAccessSeq$newIterator(this);
   }
 }
 
-
+class RandomAccessSeq$tail<X> extends RandomAccessSeq<X> {
+  ras: RandomAccessSeq<X>;
+  constructor(ras: RandomAccessSeq<X>) {
+    super();
+    this.ras = ras;
+  }
+  fastGet(idx: number): X {
+    return this.ras.get(idx + 1);
+  }
+  fastLength(): number {
+    return this.ras.length() - 1;
+  }
+}
 
 /**
  * Represents an iterator for a sequence.
@@ -41,7 +68,6 @@ class RandomAccessSeq$newIterator<X> implements Iterator<X> {
 }
 
 
-
 // Should really be defined in Range.ts, but TypeScript can't handle circular imports. 
 export class Range extends RandomAccessSeq<number> {
   start: number;
@@ -55,7 +81,7 @@ export class Range extends RandomAccessSeq<number> {
   fastGet(idx: number): number {
     return this.start + idx;
   }
-  length(): number {
+  fastLength(): number {
     return this.end - this.start;
   }
   reversed(): Seq<number> {
@@ -74,7 +100,7 @@ export class ReversedRange extends RandomAccessSeq<number> {
   fastGet(idx: number): number {
     return this.original.end - idx - 1;
   }
-  length(): number {
+  fastLength(): number {
     return this.original.length();
   }
   reversed(): Seq<number> {

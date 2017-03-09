@@ -15,7 +15,7 @@ export class ArraySeq<T> extends KeyMutableRandomAccessSeq<T> {
     return this.arr.at(idx);
   }
 
-  length(): number {
+  fastLength(): number {
     return this.arr.size;
   }
 
