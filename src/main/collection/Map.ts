@@ -22,7 +22,7 @@ export abstract class Map<K, V> {
     // Typescript fails to infer correct type when using a shorter version of this code
   }
 
-  getOrElse(k: K, defaultValue: () => K) {
+  getOrElse(k: K, defaultValue: () => V): V {
     return this.hasKey(k) ? this.get(k) : defaultValue();
   }
 
