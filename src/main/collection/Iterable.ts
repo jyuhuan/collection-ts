@@ -5,22 +5,16 @@ export abstract class Iterable<X> {
   abstract newIterator(): Iterator<X>;
 
   /**
-   * Returns a valid size if the size of this iterable is immediately ready. 
-   * Otherwise, returns -1.
+   * This function returning true ⇒ `this.size()` is very efficient.
    */
-  knownSize(): number {
-    return -1;
+  knownSize(): boolean {
+    return false;
   }
 
   /**
    * The number of elements in this iterable. 
    */
   size(): number {
-    // If the size is known (e.g., this.knownSize() is overriden by a subclass),
-    // return that size
-    if (this.knownSize() > 0) return this.knownSize();
-
-    // If not
     let i = 0;
     const iter = this.newIterator();
     while (iter.advance()) {
