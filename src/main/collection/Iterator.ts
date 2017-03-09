@@ -4,20 +4,20 @@ export interface Iterator<T> {
 }
 
 
-export class ConcatenatedIterator<X> implements Iterator<X> {
+export class ConcatenatedIterator<X, Y> implements Iterator<X|Y> {
   iter1: Iterator<X>; 
-  iter2: Iterator<X>;
-  curIter: Iterator<X>;
+  iter2: Iterator<Y>;
+  curIter: Iterator<X|Y>;
   isFirst: boolean;
 
-  constructor(iter1: Iterator<X>, iter2: Iterator<X>) {
+  constructor(iter1: Iterator<X>, iter2: Iterator<Y>) {
     this.iter1 = iter1;
     this.iter2 = iter2;
     this.curIter = iter1;
     this.isFirst = true;
   }
 
-  current(): X {
+  current(): X|Y {
     return this.curIter.current();
   }
   advance(): boolean {
@@ -69,8 +69,39 @@ export class FilteredIterator<X> implements Iterator<X> {
   }
 }
 
+export class ZippedWithIterator<X, Y, Z> implements Iterator<Z> {
+  ix: Iterator<X>; 
+  iy: Iterator<Y>;
+  f: (x: X, y: Y) => Z;
+  constructor(ix: Iterator<X>, iy: Iterator<Y>, f: (x: X, y: Y) => Z) {
+    this.ix = ix;
+    this.iy = iy;
+    this.f = f;
+  }
+  current(): Z {
+    return this.f(this.ix.current(), this.iy.current());
+  }
+  advance(): boolean {
+    return this.ix.advance() && this.iy.advance();
+  }
+}
+
+export class ZippedIterator<X, Y> extends ZippedWithIterator<X, Y, [X, Y]> {
+  constructor(ix: Iterator<X>, iy: Iterator<Y>) {
+    super(ix, iy, (x, y) => [x ,y]);
+  }
+}
+
+/**
+ * A conversion from Collection.ts iterator to TypeScript iterator.
+ */
 export class TSIterator<T> {
   iter: Iterator<T>;
+
+  /**
+   * Converts a Collection.ts iterator to TypeScript iterator. 
+   * @param iter A Collection.ts iterator
+   */
   constructor(iter: Iterator<T>) {
     this.iter = iter;
   }
