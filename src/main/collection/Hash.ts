@@ -1,7 +1,25 @@
+/**
+ * Represents a hashing strategy. 
+ * 
+ * An implementation of this interface for type X answers the question: 
+ * *how to hash an object of `X` into an integer?*
+ * 
+ * @version 0.0.0
+ * @since 0.0.0
+ */
 export interface Hash<X> {
   hashCode(x: X): number;
 }
 
+/**
+ * A default hashing strategy based on JavaScript's built-in `Map`. 
+ * 
+ * JavaScript's `Map` uses the string representation. 
+ * This hashing strategy mimics that by hashing over the string representation of the object. 
+ * 
+ * @version 0.0.0
+ * @since 0.0.0
+ */
 export class DefaultJavaScriptHash<X> implements Hash<X> {
   hashCode(x: X) {
     const str = x.toString();
@@ -9,8 +27,15 @@ export class DefaultJavaScriptHash<X> implements Hash<X> {
   }
 }
 
+/**
+ * A hashing strategy for strings. 
+ * 
+ * Copied from http://stackoverflow.com/a/7616484/2770243 with slight changes.
+ * 
+ * @version 0.0.0
+ * @since 0.0.0
+ */
 export const StringHash = {
-  //http://stackoverflow.com/a/7616484/2770243
   hashCode: (s: string) => { 
     var hash = 0, i, chr, len;
     if (s.length === 0) return hash;
