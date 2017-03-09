@@ -31,3 +31,9 @@ for (const y of ys) {
   console.log(y)
 }
 
+const zs = xs.concat(ys);
+
+console.log(zs.toString());
+
+const bp = 0;
+
