@@ -14,6 +14,9 @@ export abstract class Set<K> extends Func<K, boolean> {
   hasNot(k: K): boolean { return !this.has(k); }
 
   abstract keys(): Iterable<K>;
+  elements(): Iterable<K> {
+    return this.keys();
+  }
 
   size(): number {
     return this.keys().size();
