@@ -27,6 +27,10 @@ export abstract class Set<K> extends Func<K, boolean> {
     return !this.isEmpty();
   }
 
+  union(that: Set<K>): Set<K> {
+    return new Set$union(this, that);
+  }
+
 }
 
 class Set$union<X> extends Set<X> {
