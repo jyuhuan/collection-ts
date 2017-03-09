@@ -1,6 +1,8 @@
-import { Eq } from '../Eq';
-import { Hash } from '../../Hash';
+import { Eq, DefaultJavaScriptEq } from '../Eq';
+import { Hash, DefaultJavaScriptHash } from '../Hash';
 import { nextPowerOfTwo } from './Util';
+import { Iterable } from '../Iterable';
+import { Iterator } from '../Iterator';
 
 class Entry<K, V> {
   key: K;
@@ -32,11 +34,6 @@ export class ClosedAddressHashTable<K, V> {
   loadFactor: number;
 
   /**
-   * the number of slots used so far.
-   */
-  numSlotsUsed: number;
-
-  /**
    * The number of entries in this hash table.
    */
   size: number;
@@ -53,11 +50,14 @@ export class ClosedAddressHashTable<K, V> {
     this.keyHash = keyHash;
     this.slots = new Array<Entry<K, V>>(initialCapacity);
     this.loadFactor = loadFactor;
-    this.numSlotsUsed = 0;
     this.size = 0;
   }
 
   capacity(): number { return this.slots.length; }
+
+  entires(): Iterable<Entry<K, V>> {
+    return new EntryIterable(this);
+  }
 
   /**
    * The index of the given key in the internal array. 
@@ -70,9 +70,8 @@ export class ClosedAddressHashTable<K, V> {
     return mod < 0 ? mod + totalNumSlots : mod;
   }
 
-
   shouldExpand() {
-    return this.numSlotsUsed >= Math.floor(this.slots.length * this.loadFactor);
+    return this.size >= Math.floor(this.slots.length * this.loadFactor);
   }
 
   expand() {
@@ -94,20 +93,27 @@ export class ClosedAddressHashTable<K, V> {
       }
       i += 1;
     }
-
     this.slots = newSlots;
+  }
+
+  locateEntryFor(k: K): Entry<K, V> {
+    const idx = this.indexOf(k, this.capacity());
+    let cur = this.slots[idx];
+    while (cur != null && !this.keyEq.eq(cur.key, k)) {
+      cur = cur.next;
+    }
+    return cur;
   }
 
   /**
    * Adds a given key value pair into the hash map. 
    */
   add(k: K, v: V): void {
+    if (this.shouldExpand()) this.expand();
     const idx = this.indexOf(k, this.capacity());
     if (this.slots[idx] == null) {
       // The slot for this hash code is empty
-      if (this.shouldExpand()) this.expand();
       this.slots[idx] = new Entry(k, v);
-      this.numSlotsUsed += 1;
     }
     else { 
       // Something is already in the slot
@@ -139,7 +145,6 @@ export class ClosedAddressHashTable<K, V> {
         // remove the key and finish
         p.next = n.next;
         this.slots[idx] = dummy.next;
-        if (dummy.next == null) this.numSlotsUsed -= 1;
         this.size -= 1;
         return;
       }
@@ -150,10 +155,81 @@ export class ClosedAddressHashTable<K, V> {
     return ;
   }
 
+  clear(): void {
+    for (let i = 0; i < this.slots.length; i++) this.slots[i] = null;
+    this.size = 0;
+  }
+
   get(k: K): V {
-    return null;
+    const entry = this.locateEntryFor(k);
+    return entry == null ? null : entry.val;
   }
 
   
+  static defaultLoadFactor = 0.7;
+  static defaultCapacity = 16;
 
+  static empty<K, V>(): ClosedAddressHashTable<K, V> {
+    return ClosedAddressHashTable.emptyUnder<K, V>(new DefaultJavaScriptEq(), new DefaultJavaScriptHash());
+  }
+
+  static emptyUnder<K, V>(keyEq: Eq<K>, keyHash: Hash<K>): ClosedAddressHashTable<K, V> {
+    return new ClosedAddressHashTable<K, V>(keyEq, keyHash, ClosedAddressHashTable.defaultLoadFactor, ClosedAddressHashTable.defaultLoadFactor);
+  }
+
+  static from<K, V>(...pairs: [K, V][]): ClosedAddressHashTable<K, V> {
+    return ClosedAddressHashTable.fromUnder<K, V>(new DefaultJavaScriptEq(), new DefaultJavaScriptHash(), ...pairs);
+  }
+
+  static fromUnder<K, V>(keyEq: Eq<K>, keyHash: Hash<K>, ...pairs: [K, V][]): ClosedAddressHashTable<K, V> {
+    const tbl = new ClosedAddressHashTable<K, V>(keyEq, keyHash, pairs.length, ClosedAddressHashTable.defaultLoadFactor);
+    for (const pair of pairs) tbl.add(pair[0], pair[1]);
+    return tbl;
+  }
+  
+
+}
+
+class EntryIterator<K, V> implements Iterator<Entry<K, V>> {
+  tbl: ClosedAddressHashTable<K, V>;
+  idx: number;
+  entry: Entry<K, V>;
+
+  constructor(tbl: ClosedAddressHashTable<K, V>) {
+    this.tbl = tbl;
+    this.idx = -1;
+    this.entry = null;
+  }
+  
+  current(): Entry<K, V> {
+    return this.entry;
+  }
+  
+  advance(): boolean {
+    if (this.entry != null && this.entry.next != null) {
+      this.entry = this.entry.next;
+      return true;
+    }
+    else {
+      while (this.idx < this.tbl.slots.length) {
+        this.idx += 1;
+        if (this.tbl.slots[this.idx] != null) {
+          this.entry = this.tbl.slots[this.idx];
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+}
+
+class EntryIterable<K, V> extends Iterable<Entry<K, V>> {
+  tbl: ClosedAddressHashTable<K, V>;
+  constructor(tbl: ClosedAddressHashTable<K, V>) {
+    super();
+    this.tbl = tbl;
+  }
+  newIterator(): Iterator<Entry<K, V>> {
+    return new EntryIterator(this.tbl);
+  }
 }
