@@ -89,8 +89,6 @@ function mapDemo() {
   )
   console.log(` - map2 = ${map2}`);
 
-  // Cartesian product of two maps
-  const cartProd = map1.cartesianProduct(map2);
 
   // Mapping the values of a map
   const map3 = map2.map(b => b ? 1 : -1);
@@ -98,37 +96,44 @@ function mapDemo() {
   // Zipping two maps, where pairs with the same key are merged. 
   const zipped = map2.zip(map3);
 
-  // Once again, none of the three lines above will be executed, until now:
-  console.log(` - cartProd = ${cartProd}`);
+  // Once again, none of the two lines above will be executed, until now:
   console.log(` - map3 = ${map3}`);
   console.log(` - zipped = ${zipped}`);
+
+  // Cartesian product of two maps
+  const cartProd = map1.cartesianProduct(map2);
+  console.log(` - cartProd = ${cartProd}`);
 
   console.log('}\n')
 }
 
 function setDemo() {
-  console.log('MAP DEMO {');
+  console.log('SET DEMO {');
 
   // Creating a set out of elements
   const set1 = HashSet.from('alice', 'bob', 'catherine', 'daniel', 'emilia', 'frank');
+  console.log(` - set1 = ${set1}`)
 
   // Filter set elements
   const shorterThanSix = set1.filter(x => x.length < 6);
 
+  // Again,the line above will not be executed, until now:
+  console.log(` - shorterThanSix = ${shorterThanSix}`);
+
   // Cartesian product
   const set2 = HashSet.from(true, false);
+  console.log(` - set2 = ${set2}`)
   const cartProd = set1.cartesianProduct(set2);
 
   // Set operations: union and intersect
   const set3 = HashSet.from('daniel', 'emilia', 'frank', 'gina', 'howard', 'ian');
+  console.log(` - set3 = ${set3}`)
   const union = set1.union(set3);
   const intersect = set1.intersect(set3);
 
-  // Again, none of the three lines above will be executed, until now:
-  console.log(` - shorterThanSix = ${shorterThanSix}`);
-  console.log(` - cartProd = ${cartProd}`);
-  console.log(` - union = ${union}`);
-  console.log(` - intersect = ${intersect}`);
+  console.log(` - cartProd (set1 ⨉ set3) = ${cartProd}`);
+  console.log(` - union (set1 ⋃ set3) = ${union}`);
+  console.log(` - intersect (set1 ⋂ set3) = ${intersect}`);
 
   console.log('}\n')
 }
