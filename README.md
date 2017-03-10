@@ -1,8 +1,7 @@
 # Collection.ts
 
 > 🚧 __Ongoing Active Development__  
-Check out what has been implemented so far in [src/main/collection/](src/main/collection/).   
-See roadmap [here]().
+> See usages in [the Wiki](https://github.com/jyuhuan/collection-ts/wiki/Usage-Highlights). Check out what has been implemented so far and what's to come in [the roadmap](https://github.com/jyuhuan/collection-ts/wiki/Roadmap).
 
 __Collection.js__ is a collection framework providing lazy, efficient, and generic collections for TypeScript. 
 
