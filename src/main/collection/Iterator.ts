@@ -1,8 +1,25 @@
+import { Iterable } from './Iterable';
 export interface Iterator<T> {
   current(): T;
   advance(): boolean;
 }
 
+
+export class Iterator$reversed<X> implements Iterator<X> {
+  arr: Array<X>;
+  i: number;
+  constructor(iter: Iterable<X>) {
+    this.arr = iter.toArray();
+    this.i = this.arr.length;
+  }
+  current(): X {
+    return this.arr[this.i];
+  }
+  advance(): boolean {
+    this.i -= 1;
+    return this.i >= 0;
+  }
+}
 
 export class Iterator$concat<X, Y> implements Iterator<X|Y> {
   iter1: Iterator<X>; 
@@ -30,6 +47,32 @@ export class Iterator$concat<X, Y> implements Iterator<X|Y> {
     else return false;
   }
 }
+
+
+export class Iterator$flatMap<X, Y> implements Iterator<Y> {
+  outer: Iterator<X>;
+  inner: Iterator<Y>;
+  f: (x: X) => Iterable<Y>;
+  constructor(iter: Iterator<X>, f: (x: X) => Iterable<Y>) {
+    this.f = f;
+    this.outer = iter;
+    this.inner = EmptyIterator;
+  }
+  current(): Y {
+    return this.inner.current();
+  }
+  advance(): boolean {
+    if (this.inner.advance()) return true;
+    else {
+      while (this.outer.advance()) {
+        this.inner = this.f(this.outer.current()).newIterator();
+        if (this.inner.advance()) return true;
+      }
+      return false;
+    }
+  }
+}
+
 
 export class Iterator$map<T, U> implements Iterator<U> {
   it: Iterator<T>;
@@ -91,6 +134,17 @@ export class Iterator$zip<X, Y> extends Iterator$zipWith<X, Y, [X, Y]> {
     super(ix, iy, (x, y) => [x ,y]);
   }
 }
+
+
+const EmptyIterator: Iterator<never> = new class {
+  current(): never {
+    throw new Error('Method not implemented.');
+  }
+  advance(): boolean {
+    return false;
+  }
+}
+
 
 /**
  * A conversion from Collection.ts iterator to TypeScript iterator.
