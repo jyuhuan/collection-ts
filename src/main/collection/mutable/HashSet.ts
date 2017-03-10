@@ -18,7 +18,7 @@ export class HashSet<K> extends KeyMutableSet<K> {
   }
 
   has(k: K): boolean {
-    return this.has(k);
+    return this.tbl.locateEntryFor(k) != null;
   }
 
   keys(): Iterable<K> {
