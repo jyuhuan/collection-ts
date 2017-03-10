@@ -7,7 +7,7 @@ __Collection.js__ is a collection framework providing lazy, efficient, and gener
 
 
 
-Collection.ts exists because of the [Poly-collection](https://github.com/ctongfei/poly-collection) framework on Scala. 🌹
+Collection.ts cannot exist without the [Poly-collection](https://github.com/ctongfei/poly-collection) framework on Scala. 🌹
 
 
 ## Features
