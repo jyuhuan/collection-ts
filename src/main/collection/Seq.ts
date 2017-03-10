@@ -9,6 +9,10 @@ export abstract class Seq<X> extends Iterable<X> {
   abstract tail(): Seq<X>;
   abstract isEmpty(): boolean;
 
+  dummyHead(): Seq<X> {
+    return new DummySeqHeading(this);
+  }
+
   notEmpty() {
     return !this.isEmpty();
   }
@@ -43,10 +47,14 @@ export abstract class Seq<X> extends Iterable<X> {
     return new Seq$map(this, f);
   }
 
+  flatMap<Y>(f: (x: X) => Seq<Y>): Seq<Y> {
+    return new Seq$flatMap(this.dummyHead(), new DummySeq(), f).tail();
+  }
+
   filter(p: (x: X) => boolean): Seq<X> {
     return new Seq$filter(this, p);
   }
-
+  
   newIterator(): Iterator<X> {
     return new Seq$newIterator(this);
   }
@@ -97,28 +105,71 @@ class Seq$map<X, Y> extends Seq<Y> {
 }
 
 
+class Seq$flatMap<X, Y> extends Seq<Y> {
+
+  outer: Seq<X>;
+  inner: Seq<Y>;
+  f: (x: X) => Seq<Y>;
+
+  constructor(outer: Seq<X>, inner: Seq<Y>, f: (x: X) => Seq<Y>) {
+    super();
+    this.outer = outer;
+    this.inner = inner;
+    this.f = f;
+  }
+
+  head(): Y {
+    return this.inner.head();
+  }
+
+  tail(): Seq$flatMap<X, Y> {
+    const innerNext = this.inner.tail();
+    if (innerNext.notEmpty()) {
+      return new Seq$flatMap(this.outer, innerNext, this.f);
+    }
+    else {
+      let newOuter = this.outer.tail();
+      let newInner: Seq<Y> = new DummySeq;
+      if (newOuter.notEmpty()) newInner = this.f(newOuter.head());
+      while (newOuter.notEmpty()) {
+        if (newInner.notEmpty()) return new Seq$flatMap(newOuter, newInner, this.f);
+        newOuter = newOuter.tail();
+        newInner = this.f(newOuter.head());
+      }
+      return new Seq$flatMap(newOuter, newInner, this.f);
+    }
+  }
+
+  isEmpty(): boolean {
+    return this.outer.isEmpty();
+  }
+}
+
+
 class Seq$filter<X> extends Seq<X> {
-  h: Seq<X>;
+  d: Seq<X>;
   p: (x: X) => boolean;
   
-  constructor(seq: Seq<X>, p: (x: X) => boolean) {
+  constructor(d: Seq<X>, p: (x: X) => boolean) {
     super();
-    this.h = seq;
-    this.p = p;
-    while (this.h.notEmpty() && !this.p(this.h.head())) this.h = this.h.tail();
+    this.d = d;
     this.p = p;
   }
 
   head(): X {
-    return this.h.head();
+    return this.d.head();
   }
 
   tail(): Seq<X> {
-    return this.h.tail().filter(this.p);
+    let t = this.d.tail();
+    while (t.notEmpty() && !this.p(t.head())) {
+      t = t.tail();
+    }
+    return new Seq$filter(t, this.p);
   }
 
   isEmpty(): boolean {
-    return this.h.isEmpty();
+    return this.d.isEmpty();
   }
 
 }
@@ -127,13 +178,45 @@ class Seq$filter<X> extends Seq<X> {
 class Seq$newIterator<X> implements Iterator<X> {
   cur: Seq<X>;
   constructor(seq: Seq<X>) {
-    this.cur = new Seq$$Concrete(null, seq, false);
+    this.cur = seq.dummyHead();
   }
   current(): X {
     return this.cur.head();
   }
   advance(): boolean {
     this.cur = this.cur.tail();
-    return !this.cur.isEmpty();
+    return this.cur.notEmpty();
   }
+}
+
+class DummySeq extends Seq<never> {
+  head(): never {
+    throw new Error('Cannot access head of a dummy Seq.');
+  }
+  tail(): Seq<never> {
+    return this;
+  }
+  isEmpty(): boolean {
+    return true;
+  }
+}
+
+class DummySeqHeading<X> extends Seq<X> {
+
+  seq: Seq<X>;
+  constructor(seq: Seq<X>) {
+    super();
+    this.seq = seq;
+  }
+
+  head(): X {
+    throw new Error('Cannot access head of a dummy Seq.');
+  }
+  tail(): Seq<X> {
+    return this.seq;
+  }
+  isEmpty(): boolean {
+    return true;
+  }
+
 }
