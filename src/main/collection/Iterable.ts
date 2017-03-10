@@ -39,6 +39,17 @@ export abstract class Iterable<X> {
     return new Iterable$concat(this, that);
   }
 
+  cartesianProductWith<Y, Z>(that: Iterable<Y>, f: (x: X, y: Y) => Z): Iterable<Z> {
+    return this.flatMap(x => that.map(y => f(x, y)));
+  }
+
+  cartesianProduct<Y>(that: Iterable<Y>): Iterable<[X, Y]> {
+    return this.cartesianProductWith(that, (x, y) => {
+      const pair: [X, Y] = [x, y];
+      return pair;
+    })
+  }
+
   //endregion
 
 
@@ -173,6 +184,7 @@ class Iterable$concat<X, Y> extends Iterable<X|Y> {
     return new Iterator$concat(this.ix.newIterator(), this.iy.newIterator());
   }
 }
+
 
 class Iterable$map<T, U> extends Iterable<U> {
   it: Iterable<T>;
