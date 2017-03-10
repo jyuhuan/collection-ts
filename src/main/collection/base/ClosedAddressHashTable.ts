@@ -174,7 +174,7 @@ export class ClosedAddressHashTable<K, V> {
   }
 
   static emptyUnder<K, V>(keyEq: Eq<K>, keyHash: Hash<K>): ClosedAddressHashTable<K, V> {
-    return new ClosedAddressHashTable<K, V>(keyEq, keyHash, ClosedAddressHashTable.defaultLoadFactor, ClosedAddressHashTable.defaultLoadFactor);
+    return new ClosedAddressHashTable<K, V>(keyEq, keyHash, ClosedAddressHashTable.defaultCapacity, ClosedAddressHashTable.defaultLoadFactor);
   }
 
   static from<K, V>(...pairs: [K, V][]): ClosedAddressHashTable<K, V> {
