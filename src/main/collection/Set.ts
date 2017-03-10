@@ -82,6 +82,7 @@ class Set$intersect<X> extends Set<X> {
     return this.set1.has(k) && this.set2.has(k);
   }
   keys(): Iterable<X> {
+    // Do not simply `filter((x: X) => this.set2.has(x))` to `filter(this.set2.has)`
     return this.set1.filter((x: X) => this.set2.has(x)).keys();
   }
 }
