@@ -1,3 +1,4 @@
+import { StringBuilder } from '../util/StringBuilder';
 export class LinkedNode<X> {
   data: X;
   next: LinkedNode<X>;
@@ -116,10 +117,39 @@ export class LinkedList<X> {
   }
 
 
+  makeString(delim: string): string {
+    const sb = new StringBuilder();
+    let isFirst = true;
+
+    let cur = this.dummy.next;
+
+    while (cur != null) {
+      if (isFirst) {
+        isFirst = false;
+        sb.append(cur.data);
+      }
+      else {
+        sb.append(delim);
+        sb.append(cur.data);
+      }
+      cur = cur.next;
+    }
+
+    return sb.toString();
+  }
+
+  toString(): string {
+    return this.makeString("; ");
+  }
+
   static from<X>(...xs: X[]) {
     const l = new LinkedList<X>();
     for (const x of xs) l.append(x);
     return l;
+  }
+
+  static empty<X>() {
+    return LinkedList.from<X>();
   }
 
 }
