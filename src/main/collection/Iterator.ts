@@ -138,7 +138,7 @@ export class Iterator$zip<X, Y> extends Iterator$zipWith<X, Y, [X, Y]> {
 
 const EmptyIterator: Iterator<never> = new class {
   current(): never {
-    throw new Error('Method not implemented.');
+    throw new Error('Cannot access current on EmptyIterator.');
   }
   advance(): boolean {
     return false;
