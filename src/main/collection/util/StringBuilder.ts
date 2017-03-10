@@ -26,7 +26,7 @@ export class StringBuilder extends Builder<any, string> {
   }
 
   sizeHint(size: number): void {
-    throw new Error('Method not implemented.');
+    // do nothing
   }
 
   add(x: any): void {
