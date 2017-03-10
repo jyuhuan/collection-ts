@@ -14,7 +14,7 @@ Collection.ts cannot exist without the [Poly-collection](https://github.com/cton
 
 - Hash map and hash sets (and other keyed/hashed structures) support custom classes, as long as an equivalence strategy (an `Eq<K>` for the key type `K`) and a hashing strategy (a `Hash<K>`) are provided. A related interface, `Ord<K>`, is provided for custom ordering definitions. 
 
-- Almost all higher-order functions (e.g., `map`, `flatMap`, `filter`, `reduce`, ...) are lazy. This means that these transformations only _define_ (instead of _create_) a new collection. No actual computation will happen until the elements in the new collection is accessed.
+- Almost all higher-order functions (e.g., `map`, `flatMap`, `filter`, `reduce`, ...) are lazy. This means that these transformations only _define_ (instead of _create_) a new collection. No actual computation will happen until the elements in the new collection are accessed.
 
 - The higher-order functions return the most specific abstract type possible sa their results. For example, a `map` operation on `ArraySeq` will not return another `ArraySeq` (as in Scala), or `Iterable` (as in C#). It will return `RandomAccessSeq`, which is the most fine-grained abstract class possible for `ArraySeq`s. This is an idea borrowed from [Poly-collection](https://github.com/ctongfei/poly-collection). 
 
