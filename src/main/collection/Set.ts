@@ -1,6 +1,6 @@
 import { Eq } from './Eq';
 import { Iterable } from './Iterable';
-import { Func } from './Funcs';
+//import { Func } from './Funcs';
 
 export abstract class Set<K> /*extends Func<K, boolean>*/ {
   

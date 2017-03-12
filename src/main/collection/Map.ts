@@ -1,6 +1,6 @@
 import { Set } from './Set';
 import { Iterable } from './Iterable';
-import { Func } from './Funcs';
+//import { Func } from './Funcs';
 
 export abstract class Map<K, V> /**extends Func<K, V>**/ {
 
