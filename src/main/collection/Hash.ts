@@ -8,6 +8,11 @@
  * @since 0.0.0
  */
 export interface Hash<X> {
+  /**
+   * Computes the hash code of the given element.
+   * 
+   * @param x The item to hash. 
+   */
   hashCode(x: X): number;
 }
 

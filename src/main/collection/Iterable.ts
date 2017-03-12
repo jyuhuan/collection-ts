@@ -3,6 +3,20 @@ import { StringBuilder } from './util/StringBuilder';
 import { Iterator, Iterator$map, TSIterator, Iterator$filter, Iterator$concat, Iterator$zipWith } from './Iterator';
 import { Ord } from './Ord';
 
+/**
+ * The base class for all collections. 
+ * 
+ * This is an abstract class for all collections that define an 
+ * iterator method to step through the collection's elements one by one.
+ * 
+ * If the size of a collection is immediately ready or efficient to compute, 
+ * the implementation of that collection must override `knownSize` to always
+ * return true, and provide that efficient size with the `size` function. 
+ * 
+ * @version 0.0.0
+ * @since 0.0.0
+ * 
+ */
 export abstract class Iterable<X> {
   abstract newIterator(): Iterator<X>;
 
