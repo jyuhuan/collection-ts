@@ -8,7 +8,15 @@ import { Iterable } from './Iterable';
  *  - `current`, which returns the current element that is pointed to by the iterator.
  *  - `advance`, which moves the iterator to the next element.
  * 
- * When an iterator is newly created, it should be placed immediately before the first element.
+ * `current` should always return the same object until `advance` is called. 
+ * 
+ * When an iterator is newly created, its position should be immediated before the 
+ * first element in the collection. At this position, `current` should be undefined. 
+ * The eventual position of the iterator is immediated after the last element in the
+ * collection, and `advance` should return false. If the last call to `advance` 
+ * returns false, then `current` should be undefined. The iterator is considered dead
+ * at this point. A new iterator should be created anew in case the collection is to
+ * be iterated again. 
  * 
  * @version 0.0.0
  * @since 0.0.0 
