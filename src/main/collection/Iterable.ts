@@ -13,9 +13,11 @@ import { Ord } from './Ord';
  * the implementation of that collection must override `knownSize` to always
  * return true, and provide that efficient size with the `size` function. 
  * 
+ * The `for of` statement is supported, as the iterator method of 
+ * TypeScript/JavaScript is implemented. 
+ * 
  * @version 0.0.0
  * @since 0.0.0
- * 
  */
 export abstract class Iterable<X> {
   abstract newIterator(): Iterator<X>;

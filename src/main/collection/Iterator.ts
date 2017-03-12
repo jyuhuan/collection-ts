@@ -3,6 +3,7 @@ import { Iterable } from './Iterable';
 /**
  * An iterator is a data structure that iterates over the elements of some collection. 
  * 
+ * 
  * The two methods in this interface are:
  *  - `current`, which returns the current element that is pointed to by the iterator.
  *  - `advance`, which moves the iterator to the next element.
