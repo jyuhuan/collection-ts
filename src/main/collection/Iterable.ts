@@ -1,6 +1,9 @@
 import { Iterator$flatMap, Iterator$reversed } from './';
 import { StringBuilder } from './util/StringBuilder';
-import { Iterator, Iterator$map, TSIterator, Iterator$filter, Iterator$concat, Iterator$zipWith } from './Iterator';
+import {
+  Iterator, Iterator$map, TSIterator, Iterator$filter, Iterator$concat, Iterator$zipWith,
+  Iterator$scanLeft
+} from './Iterator';
 import { Ord } from './strategy/Ord';
 
 /**
@@ -16,14 +19,20 @@ import { Ord } from './strategy/Ord';
  * The `for of` statement is supported, as the iterator method of 
  * TypeScript/JavaScript is implemented. 
  * 
+ * @template X The type of the elements in this collection. 
+ * 
  * @version 0.0.0
  * @since 0.0.0
  */
 export abstract class Iterable<X> {
+
+  /**
+   * Creates a new {@link Iterator}. 
+   */
   abstract newIterator(): Iterator<X>;
 
   /**
-   * This function returning true ⇒ `this.size()` is very efficient.
+   * This function returning true IMPLIES that {@link size} is very efficient.
    */
   sizeIsKnown(): boolean {
     return false;
@@ -46,14 +55,14 @@ export abstract class Iterable<X> {
   }
 
   /**
-   * Inspects whether this iterable is empty.
+   * Inspects whether this collection is empty.
    */
-  isEmtpy(): boolean {
+  isEmpty(): boolean {
     return this.size() == 0;
   }
 
   /**
-   * Reverses the collection.
+   * Reverses this collection.
    */
   reversed(): Iterable<X> {
     return new Iterable$reversed(this);
@@ -75,8 +84,17 @@ export abstract class Iterable<X> {
     throw new Error('impl');
   }
   
+  
   //region Operations between Iterables
 
+  /**
+   * Concatenates two collections. Resulting in a collection whose element type is the union of the 
+   * type of elements in this collection and the type of elements in the other collection. 
+   * 
+   * @template Y The type of elements in the other collection.
+   * 
+   * @param that The other collection. 
+   */
   concat<Y>(that: Iterable<Y>): Iterable<X|Y> {
     return new Iterable$concat(this, that);
   }
@@ -85,6 +103,9 @@ export abstract class Iterable<X> {
    * Computes the Cartesian product with this collection and another collection,
    * then transforms the resulting pairs using the provided function.
    *
+   * @template Y The type of the elements in the other collection.
+   * @template Z The type of the elements in the resulting collection. 
+   * 
    * @param that The other collection.
    * @param f The transformational function that operates on a pair resulting from the product.
    */
@@ -94,6 +115,9 @@ export abstract class Iterable<X> {
 
   /**
    * Computes the Cartesian product with this collection and another collection.
+   * 
+   * @template Y The type of the other collection.  
+   * 
    * @param that The other collection.
    */
   cartesianProduct<Y>(that: Iterable<Y>): Iterable<[X, Y]> {
@@ -147,7 +171,7 @@ export abstract class Iterable<X> {
    * @param op The reducing operator. Should be associative.
    */
   reduceLeft(op: (x1: X, x2: X) => X): X {
-    if (this.isEmtpy()) throw new Error('empty.reduce');
+    if (this.isEmpty()) throw new Error('empty.reduce');
     let isFirst = true;
     let res: X = this.head();
     for (const x of this) {
@@ -220,10 +244,11 @@ export abstract class Iterable<X> {
 
 
   scanLeft<Y>(y: Y, op: (y: Y, x: X) => Y): Iterable<Y> {
-    throw new Error('An implementation is missing!');
+    return new Iterable$scanLeft(this, y, op);
   }
+  
   scanRight<Y>(y: Y, op: (x: X, y: Y) => Y): Iterable<Y> {
-    throw new Error('An implementation is missing!');
+    return this.reversed().scanLeft(y, (x, y) => op(y, x)).reversed();
   }
 
   /**
@@ -369,6 +394,23 @@ class Iterable$filter<X> extends Iterable<X> {
     return new Iterator$filter(this.ix.newIterator(), this.p);
   }
 }
+
+
+class Iterable$scanLeft<X, Y> extends Iterable<Y> {
+  ix: Iterable<X>;
+  y: Y; 
+  f: (y: Y, x: X) => Y;
+  constructor(ix: Iterable<X>, y: Y, f: (y: Y, x: X) => Y) {
+    super();
+    this.ix = ix;
+    this.y = y;
+    this.f = f;
+  }
+  newIterator(): Iterator<Y> {
+    return new Iterator$scanLeft(this.ix.newIterator(), this.y, this.f);
+  }
+}
+
 
 class Iterable$zipWith<X, Y, Z> extends Iterable<Z> {
   ix: Iterable<X>; 

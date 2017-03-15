@@ -151,6 +151,35 @@ export class Iterator$zipWith<X, Y, Z> implements Iterator<Z> {
   }
 }
 
+export class Iterator$scanLeft<X, Y> implements Iterator<Y> {
+  ix: Iterator<X>;
+  acc: Y;
+  f: (y: Y, x: X) => Y;
+  isFirst: boolean;
+  constructor(ix: Iterator<X>, y: Y, f: (y: Y, x: X) => Y) {
+    this.ix = ix;
+    this.acc = y;
+    this.f = f;
+    this.isFirst = true;
+  }
+  
+  current(): Y {
+    return this.acc;
+  }
+
+  advance(): boolean {
+    if (this.isFirst) {
+      this.isFirst = false;
+      return true;
+    }
+    else {
+      const ixAdv = this.ix.advance();
+      if (ixAdv) this.acc = this.f(this.acc, this.ix.current());
+      return ixAdv;
+    }
+  }
+}
+
 export class Iterator$zip<X, Y> extends Iterator$zipWith<X, Y, [X, Y]> {
   constructor(ix: Iterator<X>, iy: Iterator<Y>) {
     super(ix, iy, (x, y) => [x ,y]);
