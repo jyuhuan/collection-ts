@@ -1,5 +1,5 @@
-import { Eq, DefaultJavaScriptEq } from '../Eq';
-import { Hash, DefaultJavaScriptHash } from '../Hash';
+import { Eq, DefaultJavaScriptEq } from '../strategy/Eq';
+import { Hash, DefaultJavaScriptHash } from '../strategy/Hash';
 import { nextPowerOfTwo } from './Util';
 import { Iterable } from '../Iterable';
 import { Iterator } from '../Iterator';
@@ -22,7 +22,7 @@ class Entry<K, V> {
 
 /**
  * Represents a hash table which handles collision by a linked list.
- * TODO: change linked list to a binary search tree. 
+ * TODO: change linked list to a binary search tree.
  */
 export class ClosedAddressHashTable<K, V> {
 
@@ -106,7 +106,7 @@ export class ClosedAddressHashTable<K, V> {
   }
 
   /**
-   * Adds a given key value pair into the hash map. 
+   * Adds a given key value pair into the hash map.
    */
   add(k: K, v: V): void {
     if (this.shouldExpand()) this.expand();

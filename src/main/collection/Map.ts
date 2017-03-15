@@ -4,7 +4,7 @@ import { Iterable } from './Iterable';
 
 export abstract class Map<K, V> /**extends Func<K, V>**/ {
 
-  // // This enables using this map as a function. 
+  // // This enables using this map as a function.
   // constructor() {
   //   super((k: K) => this.get(k));
   // }
@@ -53,8 +53,8 @@ export abstract class Map<K, V> /**extends Func<K, V>**/ {
    * @param defaultValue A default value which is used in case the provided key is not 
    *        associated with any value. 
    * 
-   *        By defining this as a supplier function mimics the pass-by-name policy. 
-   *        This is useful when, for example, a random value must be returned when the 
+   *        By defining this as a supplier function mimics the pass-by-name policy.
+   *        This is useful when, for example, a random value must be returned when the
    *        key does not exist. 
    */
   getOrElse(k: K, defaultValue: () => V): V {

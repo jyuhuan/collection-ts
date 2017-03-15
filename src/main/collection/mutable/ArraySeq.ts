@@ -1,5 +1,5 @@
 import { ExpandableArray } from '../base/ExpandableArray';
-import { Eq } from '../Eq';
+import { Eq } from '../strategy/Eq';
 import { KeyMutableRandomAccessSeq } from './KeyMutableRandomAccessSeq';
 
 export class ArraySeq<T> extends KeyMutableRandomAccessSeq<T> {

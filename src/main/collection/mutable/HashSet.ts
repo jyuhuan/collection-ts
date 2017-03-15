@@ -1,9 +1,9 @@
 import { Set } from '../Set';
-import { Eq, DefaultJavaScriptEq } from '../Eq';
+import { Eq, DefaultJavaScriptEq } from '../strategy/Eq';
 import { Iterable } from '../Iterable';
 import { ClosedAddressHashTable } from '../base/ClosedAddressHashTable';
 import { KeyMutableSet } from './KeyMutableSet';
-import { Hash, DefaultJavaScriptHash } from '../Hash';
+import { Hash, DefaultJavaScriptHash } from '../strategy/Hash';
 
 export class HashSet<K> extends KeyMutableSet<K> {
   tbl: ClosedAddressHashTable<K, any>;
@@ -14,7 +14,7 @@ export class HashSet<K> extends KeyMutableSet<K> {
   }
 
   keyEq(): Eq<K> {
-    return this.keyEq();
+    return this.tbl.keyEq;
   }
 
   has(k: K): boolean {

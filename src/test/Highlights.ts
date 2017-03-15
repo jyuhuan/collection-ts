@@ -1,6 +1,6 @@
 import { ArraySeq } from '../main/collection/mutable/ArraySeq';
 import { HashMap } from '../main/collection/mutable/HashMap';
-import { StringHash } from '../main/collection/Hash';
+import { StringHash } from '../main/collection/strategy/Hash';
 import { HashSet } from '../main/collection/mutable/HashSet';
 
 

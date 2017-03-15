@@ -1,6 +1,6 @@
 import { Iterable } from './Iterable';
 import { Iterator } from './Iterator';
-import { Eq } from './Eq';
+import { Eq } from './strategy/Eq';
 import { Map } from './Map';
 import { Set } from './Set';
 

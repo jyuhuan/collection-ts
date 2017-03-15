@@ -1,8 +1,8 @@
 import { ClosedAddressHashTable } from '../base/ClosedAddressHashTable';
 import { Set } from '../Set';
-import { Eq, DefaultJavaScriptEq } from '../Eq';
+import { Eq, DefaultJavaScriptEq } from '../strategy/Eq';
 import { Iterable } from '../Iterable';
-import { Hash, DefaultJavaScriptHash } from '../Hash';
+import { Hash, DefaultJavaScriptHash } from '../strategy/Hash';
 import { KeyMutableMap } from './KeyMutableMap';
 
 export class HashMap<K, V> extends KeyMutableMap<K, V> {

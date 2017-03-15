@@ -1,5 +1,5 @@
 import { LinkedList, LinkedNode } from '../base/LinkedList';
-import { Eq } from '../Eq';
+import { Eq } from '../strategy/Eq';
 import { Iterator } from '../Iterator';
 import { Seq } from '../Seq';
 

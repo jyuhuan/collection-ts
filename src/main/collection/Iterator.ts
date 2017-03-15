@@ -1,7 +1,7 @@
 import { Iterable } from './Iterable';
 
 /**
- * An iterator is a data structure that iterates over the elements of some collection. 
+ * An iterator is a data structure that iterates over the elements of some collection.
  * 
  * 
  * The two methods in this interface are:
@@ -175,7 +175,7 @@ export class TSIterator<T> {
   iter: Iterator<T>;
 
   /**
-   * Converts a Collection.ts iterator to TypeScript iterator. 
+   * Converts a Collection.ts iterator to TypeScript iterator.
    * @param iter A Collection.ts iterator
    */
   constructor(iter: Iterator<T>) {

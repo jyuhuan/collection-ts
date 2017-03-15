@@ -1,4 +1,4 @@
-import { Eq } from './Eq';
+import { Eq } from './strategy/Eq';
 import { Iterable } from './Iterable';
 //import { Func } from './Funcs';
 

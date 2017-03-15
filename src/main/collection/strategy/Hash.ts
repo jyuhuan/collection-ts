@@ -1,5 +1,5 @@
 /**
- * Represents a hashing strategy. 
+ * Represents a hashing strategy.
  * 
  * An implementation of this interface for type X answers the question: 
  * *how to hash an object of `X` into an integer?*

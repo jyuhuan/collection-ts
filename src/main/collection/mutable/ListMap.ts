@@ -1,4 +1,4 @@
-import { Eq } from '../Eq';
+import { Eq } from '../strategy/Eq';
 import { LinkedList, LinkedNode } from '../base/LinkedList';
 import { KeyMutableMap } from './KeyMutableMap';
 import { Set } from '../Set';
