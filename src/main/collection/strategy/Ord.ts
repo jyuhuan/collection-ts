@@ -25,5 +25,29 @@ export abstract class Ord<X> {
   min(a: X, b: X): X {
     return this.lt(a, b) ? a : b;
   }
+  
+  reversed(): Ord<X> {
+    return new Ord$reversed(this);
+  }
 
+}
+
+export class DefaultNumberOrd extends Ord<number> {
+  compare(a: number, b: number): number {
+    return a - b;
+  }
+}
+
+class Ord$reversed<X> extends Ord<X> {
+  ox: Ord<X>;
+  constructor(ox: Ord<X>) {
+    super();
+    this.ox = ox;
+  }
+  reversed() {
+    return this.ox;
+  }
+  compare(x1: X, x2: X): number {
+    return -this.ox.compare(x1, x2);
+  }
 }

@@ -272,11 +272,11 @@ export abstract class Iterable<X> {
   }
 
   min(o: Ord<X>): X {
-    return this.reduce(o.min);
+    return this.reduce((a, b) => o.min(a, b)); // Writing o.max will result in `this` of Ord to be undefined. 
   }
 
   max(o: Ord<X>): X {
-    return this.reduce(o.max);
+    return this.reduce((a, b) => o.max(a, b));  // Writing o.max will result in `this` of Ord to be undefined. 
   }
 
   toArray(): Array<X> {
