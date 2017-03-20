@@ -2,6 +2,9 @@ import { Eq } from './strategy/Eq';
 import { Iterable } from './Iterable';
 //import { Func } from './Funcs';
 
+/**
+ * A set is not iterable. Use `elements` to get an iterable of elements. 
+ */
 export abstract class Set<K> /*extends Func<K, boolean>*/ {
   
   // constructor() {
